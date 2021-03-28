@@ -1,0 +1,12 @@
+﻿@model Int32
+
+<div>
+    <a asp-controller="Cart" asp-action="Index"
+       asp-route-returnUrl="@ViewContext.HttpContext.Request.Path"
+       class="btn btn-sm btn-outline-dark">
+        <small>
+            <b>@Model</b> item(s)
+        </small>
+        <i class="fa fa-shopping-cart"></i>
+    </a>
+</div>

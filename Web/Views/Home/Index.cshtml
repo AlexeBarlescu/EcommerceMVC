@@ -1,12 +1,22 @@
-@model IEnumerable<Product>
+@model ProductListViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
 
-@foreach (Product p in Model)
-{
-    <div style="width: 130px; border: 2px solid black" class="p-2 my-2">
-        <img src="@p.ImageUrl" style="width: 100%"/>
-        <h5 class="text-center pt-1">@p.ProductName</h5>
-    </div>
-}
+<div class="row">
+    @foreach (Product p in Model.Products)
+    {
+        <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+            <partial name="ProductSummary" model="@p"/>
+        </div>
+    }
+</div>
+
+<ul class="pagination">
+    @for (int i = 1; i <= Model.PagingInfo.TotalPages; i++)
+    {
+        <li class="page-item">
+            <a class="page-link" asp-controller="Home" asp-action="Index" asp-route-pageNumber="@i">@i</a>
+        </li>
+    }
+</ul>

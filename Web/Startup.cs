@@ -32,7 +32,9 @@ namespace Web
             conn.Open();
             services.AddDbContext<AppContext>(opts => opts.UseSqlite(conn));
             services.AddTransient<IDataRepository, EfDataRepository>();
-            
+
+            services.AddDistributedMemoryCache();
+            services.AddSession();
             services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
@@ -50,11 +52,27 @@ namespace Web
             }
             app.UseStaticFiles();
 
+            app.UseSession();
             app.UseRouting();
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute("category&page",
+                    "{category}/Page{pageNumber:int}", new { Controller = "Home", Action = "Index"});
+                
+                endpoints.MapControllerRoute("category",
+                    "{category}", new { Controller = "Home", Action = "Index", pageNumber = 1 });
+                
+                endpoints.MapControllerRoute("products&page",
+                    "Products/Page{pageNumber:int}", new { Controller = "Home", Action = "Index"});
+                
+                endpoints.MapControllerRoute("products",
+                    "Products", new { Controller = "Home", Action = "Index", pageNumber = 1 });
+                
+                endpoints.MapDefaultControllerRoute();
+            });
             
             SeedData.Seed(ctx);
         }
