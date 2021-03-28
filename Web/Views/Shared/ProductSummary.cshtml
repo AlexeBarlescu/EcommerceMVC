@@ -19,7 +19,8 @@
                 </div>
                 <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.Path">
                 <input asp-for="ProductId" hidden="">
-                <input type="text" name="quantity" placeholder="1" class="form-control text-center font-weight-bold" id="input_@Model.ProductId">
+                <input type="text" name="quantity" placeholder="1" value="1"
+                       class="form-control text-center font-weight-bold" id="input_@Model.ProductId">
                 <div class="input-group-append">
                     <button class="btn btn-sm btn-secondary" id="plus_@Model.ProductId">
                         <i class="fa fa-plus"></i>

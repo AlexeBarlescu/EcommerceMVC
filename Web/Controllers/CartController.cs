@@ -36,5 +36,13 @@ namespace Web.Controllers
             _cart.UpdateItem(p, quantity);
             return RedirectToAction(nameof(Index), new {returnUrl = returnUrl});
         }
+        
+        public IActionResult Remove(int productId, string returnUrl)
+        {
+            Product p = _repo.GetProduct(productId);
+            _cart.RemoveLine(p);
+            return RedirectToAction(nameof(Index), new {returnUrl = returnUrl});
+        }
+        
     }
 }
