@@ -20,7 +20,32 @@
             {
                 <tr>
                     <td>@line.Product.ProductName</td>
-                    <td class="text-center">@line.Quantity</td>
+                    <td class="text-center">
+                        <form asp-controller="Cart" asp-action="UpdateCart" method="post" class="d-inline-block">
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-sm btn-secondary" id="minus_@line.Product.ProductId">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                                <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl">
+                                <input value="@line.Product.ProductId" name="productId" hidden>
+                                <input type="text" name="quantity" 
+                                       placeholder="@line.Quantity" 
+                                       value="@line.Quantity" 
+                                       class="form-control text-center font-weight-bold" style="max-width:35px"
+                                       id="input_@line.Product.ProductId">
+                                <div class="input-group-append">
+                                    <button class="btn btn-sm btn-secondary" id="plus_@line.Product.ProductId">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                                <button class="btn btn-sm btn-primary float-right ml-2">
+                                    <i class="fa fa-arrow-alt-circle-up"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </td>
                     <td class="text-right">@line.Product.Price.ToString("c")</td>
                     <td class="text-right">
                         @((line.Quantity * line.Product.Price).ToString("c"))

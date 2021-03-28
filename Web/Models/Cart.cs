@@ -22,6 +22,13 @@ namespace Web.Models
                 line.Quantity += quantity;
             }
         }
+        
+        public virtual void UpdateItem(Product product, int quantity)
+        {
+            CartLine line = Lines.FirstOrDefault(l => l.Product.ProductId == product.ProductId);
+
+            if (line != null) line.Quantity = quantity;
+        }
 
         public virtual void RemoveLine(Product product) => 
             Lines.RemoveAll(l => l.Product.ProductId == product.ProductId);

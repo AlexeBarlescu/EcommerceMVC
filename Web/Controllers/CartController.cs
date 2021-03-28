@@ -29,5 +29,12 @@ namespace Web.Controllers
             _cart.AddItem(p, quantity);
             return Redirect(returnUrl);
         }
+        [HttpPost]
+        public IActionResult UpdateCart(int productId, int quantity, string returnUrl)
+        {
+            Product p = _repo.GetProduct(productId);
+            _cart.UpdateItem(p, quantity);
+            return RedirectToAction(nameof(Index), new {returnUrl = returnUrl});
+        }
     }
 }

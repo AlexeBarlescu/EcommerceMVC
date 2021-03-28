@@ -29,6 +29,12 @@ namespace Web.Models
             Session.SetJson("Cart", this);
         }
 
+        public override void UpdateItem(Product product, int quantity)
+        {
+            base.UpdateItem(product, quantity);
+            Session.SetJson("Cart", this);
+        }
+
         public override void RemoveLine(Product product)
         {
             base.RemoveLine(product);
