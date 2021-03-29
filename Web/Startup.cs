@@ -27,6 +27,7 @@ namespace Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddRazorPages();
             
             SqliteConnection conn = new SqliteConnection("DataSource=:memory:");
             conn.Open();
@@ -38,7 +39,7 @@ namespace Web
             services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            
+            services.AddServerSideBlazor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,6 +75,9 @@ namespace Web
                     "Products", new { Controller = "Home", Action = "Index", pageNumber = 1 });
                 
                 endpoints.MapDefaultControllerRoute();
+                endpoints.MapRazorPages();
+                endpoints.MapBlazorHub();
+                endpoints.MapFallbackToPage("/Admin/{*catchall}", "/Admin/Index");
             });
             
             SeedData.Seed(ctx);

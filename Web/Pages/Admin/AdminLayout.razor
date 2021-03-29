@@ -1,0 +1,45 @@
+﻿@inherits LayoutComponentBase
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light box-shadow border-bottom bg-light mb-3">
+        <div class="container-fluid">
+            <div class="navbar-brand">ADMIN</div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex ">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <NavLink class="nav-link"
+                                 href="/Admin/Products"
+                                 ActiveClass="text-danger"
+                                 Match="@NavLinkMatch.Prefix">
+                            Products
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link"
+                                 href="/Admin/Orders"
+                                 ActiveClass="text-danger"
+                                 Match="@NavLinkMatch.Prefix">
+                            Orders
+                        </NavLink>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="container-fluid">
+    <main role="main" class="pb-3">
+        @Body
+    </main>
+</div>
+
+
+<footer class="border-top footer text-muted">
+    <div class="container-fluid">
+        &copy; 2021 - Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+</footer>
