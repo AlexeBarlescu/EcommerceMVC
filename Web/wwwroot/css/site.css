@@ -74,7 +74,24 @@ img{
 }
 .product__image-container {
     padding: 45px 45px 0;
+    position: relative;
 }
+.product__sale, .product__out {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    border-top-left-radius:3px;
+    color: white;
+    padding: 2px 5px;
+    text-transform: uppercase;
+}
+.product__out {
+    background: #1b6ec2;
+}
+.product__sale {
+    background: #e32727;
+}
+
 .input-validation-error, .form-control.invalid {
     border: 2px solid red;
 }

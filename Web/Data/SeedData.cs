@@ -1,13 +1,29 @@
-﻿using System.Linq;
+﻿using Microsoft.AspNetCore.Identity;
+using System.Linq;
+using System.Threading.Tasks;
 using Web.Models;
 
 namespace Web.Data
 {
     public class SeedData
     {
-        public static void Seed(AppContext ctx)
+        private const string AdminUser = "Admin";
+        private const string AdminPassword = "Secret123$";
+
+        public static async Task Seed(AppContext ctx, UserManager<IdentityUser> userManager)
         {
             ctx.Database.EnsureCreated();
+
+            //Seed Admin User
+
+            IdentityUser user = await userManager.FindByIdAsync(AdminUser);
+            if (user == null)
+            {
+                user = new IdentityUser("Admin");
+                user.Email = "admin@example.com";
+                user.PhoneNumber = "555-12345";
+                await userManager.CreateAsync(user, AdminPassword);
+            }
 
             if (ctx.Products.Any()) return;
             

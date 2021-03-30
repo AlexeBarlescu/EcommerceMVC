@@ -1,0 +1,25 @@
+﻿@model LoginViewModel
+
+
+    <div class="row">
+        <div class="col-md-6 col-lg-4 mx-md-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="Login" method="post">
+                        <input asp-for="ReturnUrl" hidden>
+                        <div class="form-group">
+                            <label>User Name</label>
+                            <input asp-for="Name" class="form-control">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input asp-for="Password" class="form-control">
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <button class="btn btn-primary mx-auto">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

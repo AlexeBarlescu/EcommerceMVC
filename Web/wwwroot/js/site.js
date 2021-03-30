@@ -31,7 +31,7 @@ plusButtons.forEach((button, index) => {
         event.preventDefault();
         let inputValue = parseInt(input.value.toString());
         if(isNaN(inputValue)) inputValue = 1;
-        if(inputValue === 10) return;
+        if(inputValue === 20) return;
         inputValue += 1;
         input.value = inputValue.toString();
     });

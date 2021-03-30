@@ -20,6 +20,10 @@ namespace Web.Data
         public void SaveOrder(Order order)
         {
             _ctx.AttachRange(order.Lines.Select(l => l.Product));
+            foreach (CartLine line in order.Lines)
+            {
+                line.Product.Stock -= line.Quantity;
+            }
             if (order.OrderId == 0)
             {
                 _ctx.Orders.Add(order);

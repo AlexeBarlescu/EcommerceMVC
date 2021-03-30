@@ -2,13 +2,31 @@
 
 <div class="card" style="">
     <div class="product__image-container">
+        @if(Model.Stock == 0)
+        {
+            <small class="product__out">out of stock</small>
+        }
+        else if(Model.SalePrice != null)
+        {
+            <small class="product__sale">sale</small>
+        }
         <img src="@Url.Content(Model.ImageUrl)" alt="product image" class="card-img-top">
     </div>
 
     <div class="card-body">
         <div class="d-flex justify-content-between mb-3">
             <span>@Model.ProductName.ToUpper()</span>
-            <strong>@Model.Price.ToString("c")</strong>
+            @if (Model.SalePrice != null)
+            {
+                <div>
+                    <small class="text-muted" style="text-decoration:line-through">was @Model.Price.ToString("c")</small>
+                    <strong class="text-danger">@Model.SalePrice.Value.ToString("c")</strong>
+                </div>
+            }
+            else
+            {
+                <strong>@Model.Price.ToString("c")</strong>
+            }
         </div>
         <form asp-controller="Cart" asp-action="AddToCart" method="post">
             <div class="input-group input-group-sm">
@@ -26,7 +44,9 @@
                         <i class="fa fa-plus"></i>
                     </button>
                 </div>
-                <button class="btn btn-sm btn-primary float-right ml-2">
+                <button class="btn btn-sm btn-primary float-right ml-2" 
+                        style="width:55px"
+                        disabled="@(Model.Stock == 0 ? "disabled":"")">
                     <i class="fa fa-cart-plus"></i>
                 </button>
             </div>

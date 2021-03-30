@@ -1,4 +1,6 @@
 ﻿@page "/Admin"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 
 @{ Layout = null; }
 
@@ -9,13 +11,13 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css">
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
     <base href="~/" />
     <title>Admin</title>
 </head>
 <body>
-    <component type="typeof(AdminRouter)" render-mode="Server"/>
+    <component type="typeof(AdminRouter)" render-mode="Server" />
     <script src="/_framework/blazor.server.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -40,10 +41,13 @@ namespace Web
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddServerSideBlazor();
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                    .AddEntityFrameworkStores<AppContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppContext ctx)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppContext ctx, UserManager<IdentityUser> userManager)
         {
             if (env.IsDevelopment())
             {
@@ -58,6 +62,7 @@ namespace Web
             app.UseSession();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -80,7 +85,7 @@ namespace Web
                 endpoints.MapFallbackToPage("/Admin/{*catchall}", "/Admin/Index");
             });
             
-            SeedData.Seed(ctx);
+            SeedData.Seed(ctx, userManager);
         }
     }
 }
