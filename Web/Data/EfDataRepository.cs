@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Web.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Web.Data
 {
@@ -14,7 +15,7 @@ namespace Web.Data
 
         public IQueryable<Product> Products => _ctx.Products;
         
-        public IQueryable<Order> Orders => _ctx.Orders;
+        public IQueryable<Order> Orders => _ctx.Orders.Include(o => o.Lines).ThenInclude(l => l.Product);
         
         public void SaveOrder(Order order)
         {

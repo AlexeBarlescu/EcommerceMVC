@@ -1,8 +1,40 @@
 ﻿@page "/Admin/Orders"
+@inherits OwningComponentBase<IDataRepository>
 
-<h1>Orders</h1>
+<OrderTable TableTitle="UNSHIPPED ORDERS" ButtonLabel="SHIP ORDER" Theme="danger"
+            Orders="UnshippedOrders" OrderSelected="ShipOrder" />
+<br />
+<OrderTable TableTitle="SHIPPED ORDERS" ButtonLabel="RESET ORDER" Theme="success"
+            Orders="ShippedOrders" OrderSelected="ResetOrder" />
 
-@code 
+@code
 {
+    public IDataRepository Repo => Service;
+    public IEnumerable<Order> UnshippedOrders { get; set; }
+    public IEnumerable<Order> ShippedOrders { get; set; }
+    public IEnumerable<Order> AllOrders { get; set; }
 
+    protected async override Task OnInitializedAsync()
+    {
+        await UpdateData();
+    }
+
+    public async Task UpdateData()
+    {
+        AllOrders = await Repo.Orders.ToListAsync();
+        
+
+        UnshippedOrders = AllOrders.Where(o => o.Shipped == false);
+        ShippedOrders = AllOrders.Where(o => o.Shipped == true);
+    }
+
+    private void UpdateOrder(int id, bool shipValue)
+    {
+        Order o = Repo.Orders.FirstOrDefault(o => o.OrderId == id);
+        o.Shipped = shipValue;
+        Repo.SaveOrder(o);
+    }
+
+    public void ShipOrder(int id) => UpdateOrder(id, true);
+    public void ResetOrder(int id) => UpdateOrder(id, false);
 }
