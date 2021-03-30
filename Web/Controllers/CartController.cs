@@ -24,11 +24,11 @@ namespace Web.Controllers
         [HttpPost]
         public IActionResult AddToCart(int productId, int quantity, string returnUrl)
         {
-            ViewBag.ReturnUrl = returnUrl;
             Product p = _repo.GetProduct(productId);
             _cart.AddItem(p, quantity);
             return Redirect(returnUrl);
         }
+
         [HttpPost]
         public IActionResult UpdateCart(int productId, int quantity, string returnUrl)
         {

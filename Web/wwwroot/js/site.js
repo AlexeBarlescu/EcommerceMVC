@@ -36,4 +36,3 @@ plusButtons.forEach((button, index) => {
         input.value = inputValue.toString();
     });
 });
-

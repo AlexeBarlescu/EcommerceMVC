@@ -7,16 +7,17 @@
     @foreach (Product p in Model.Products)
     {
         <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
-            <partial name="ProductSummary" model="@p"/>
+            <partial name="ProductSummary" model="@p" />
         </div>
     }
 </div>
-
 <ul class="pagination">
     @for (int i = 1; i <= Model.PagingInfo.TotalPages; i++)
     {
-        <li class="page-item">
+        <li class="page-item @(Model.PagingInfo.CurrentPage == i ? "active":"")">
             <a class="page-link" asp-controller="Home" asp-action="Index" asp-route-pageNumber="@i">@i</a>
         </li>
     }
 </ul>
+
+

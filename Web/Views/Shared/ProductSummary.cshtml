@@ -2,11 +2,11 @@
 
 <div class="card" style="">
     <div class="product__image-container">
-        @if(Model.Stock == 0)
+        @if (Model.Stock == 0)
         {
             <small class="product__out">out of stock</small>
         }
-        else if(Model.SalePrice != null)
+        else if (Model.SalePrice != null)
         {
             <small class="product__sale">sale</small>
         }
@@ -44,9 +44,8 @@
                         <i class="fa fa-plus"></i>
                     </button>
                 </div>
-                <button class="btn btn-sm btn-primary float-right ml-2" 
-                        style="width:55px"
-                        disabled="@(Model.Stock == 0 ? "disabled":"")">
+                <button class="btn btn-sm btn-primary float-right ml-2 add-cart" style="width:55px" 
+                        @(Model.Stock == 0 ? "disabled":"")>
                     <i class="fa fa-cart-plus"></i>
                 </button>
             </div>

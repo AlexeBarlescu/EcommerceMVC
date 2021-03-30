@@ -52,7 +52,7 @@ namespace Web.Data
                 new Product("Eggplant", vegetables, 0.60, null, 20, "~/img/veg/eggplant.png"),
                 new Product("Green Peas", vegetables, 01.50, 1.20, 20, "~/img/veg/green-pea.png"),
                 new Product("Onion", vegetables, 0.10, null, 20, "~/img/veg/onion.png"),
-                new Product("Potato", vegetables, 0.20, null, 20, "~/img/veg/potato.png"),
+                new Product("Potato", vegetables, 0.20, null, 0, "~/img/veg/potato.png"),
                 new Product("Pumpkin", vegetables, 3.30, 2.99, 20, "~/img/veg/pumpkin.png"),
                 new Product("Spinach", vegetables, 2.99, null, 20, "~/img/veg/spinach.png")
             );

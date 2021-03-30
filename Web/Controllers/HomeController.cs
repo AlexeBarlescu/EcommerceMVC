@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Web.Data;
 using Web.Models;
 using Web.Models.ViewModels;
@@ -21,21 +17,27 @@ namespace Web.Controllers
             _repo = repo;
         }
 
-        public IActionResult Index(string category, int pageNumber = 1) => 
-            View(new ProductListViewModel 
+        public IActionResult Index(string category, int pageNumber = 1)
+        {
+            var query = _repo.Products;
+            if (category != null)
             {
-                Products = _repo.Products
-                    .Where(p => category == null || p.Category == category)
-                    .Skip((pageNumber - 1) * PageSize).Take(PageSize),
+                query = query.Where(p => p.Category == category);
+                ViewBag.SelectedCategory = category;
+            }
+
+
+            return View(new ProductListViewModel
+            {
+                Products = query.Skip((pageNumber - 1) * PageSize).Take(PageSize),
                 PagingInfo = new PagingInfo
                 {
                     PageSize = PageSize,
-                    TotalItems = category == null ? 
-                        _repo.Products.Count() : 
-                        _repo.Products.Count(p => p.Category == category),
+                    TotalItems = query.Count(),
                     CurrentPage = pageNumber
                 }
             });
+        }
 
         public IActionResult Privacy()
         {
