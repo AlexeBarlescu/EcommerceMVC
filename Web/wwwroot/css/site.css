@@ -72,12 +72,15 @@ body {
 img{
   width: 100%;
 }
-.product__image-container{
-  padding: 45px 45px 0;
+.product__image-container {
+    padding: 45px 45px 0;
 }
-.input-validation-error{
-  border: 2px solid red;
+.input-validation-error, .form-control.invalid {
+    border: 2px solid red;
 }
 .form-control.valid{
   border: 2px solid green;
+}
+.validation-message{
+    color: red;
 }

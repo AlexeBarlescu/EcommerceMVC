@@ -33,7 +33,7 @@ namespace Web.Models
         public virtual void RemoveLine(Product product) => 
             Lines.RemoveAll(l => l.Product.ProductId == product.ProductId);
 
-        public decimal ComputeTotalValue() =>
+        public double ComputeTotalValue() =>
             Lines.Sum(l => l.Product.Price * l.Quantity);
 
         public virtual void Clear() => Lines.Clear();

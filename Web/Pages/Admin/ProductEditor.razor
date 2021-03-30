@@ -1,0 +1,66 @@
+﻿@page "/Admin/Products/Edit/{id:int}"
+@inherits OwningComponentBase<IDataRepository>
+@inject NavigationManager NavManager
+
+<div class="row">
+    <div class="col-md-6">
+        <EditForm Model="Product" OnValidSubmit="SaveProduct">
+            <DataAnnotationsValidator />
+            
+            <div class="form-group">
+                <label>ID</label>
+                <input class="form-control" disabled value="@Product.ProductId" />
+            </div>
+            <div class="form-group">
+                <label>Name</label>
+                <InputText class="form-control" @bind-Value="Product.ProductName" />
+                <ValidationMessage For="@(() => Product.ProductName)" />
+            </div>
+            <div class="form-group">
+                <label>Category</label>
+                <InputText class="form-control" @bind-Value="Product.Category" />
+                <ValidationMessage For="@(() => Product.Category)" />
+            </div>
+            <div class="form-group">
+                <label>Price</label>
+                <InputNumber class="form-control" @bind-Value="Product.Price" />
+                <ValidationMessage For="@(() => Product.Price)" />
+            </div>
+            <div class="form-group">
+                <label>Sale Price</label>
+                <InputNumber class="form-control" @bind-Value="Product.SalePrice" />
+                <ValidationMessage For="@(() => Product.SalePrice)" />
+            </div>
+            <div class="form-group">
+                <label>Stock</label>
+                <InputNumber class="form-control" @bind-Value="Product.Stock" />
+                <ValidationMessage For="@(() => Product.Stock)" />
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-warning">Save</button>
+                <NavLink class="btn btn-secondary" href="/Admin/Products">Cancel</NavLink>
+            </div>
+
+        </EditForm>
+    </div>
+</div>
+
+@code 
+{
+    public IDataRepository Repo => Service;
+
+    [Parameter]
+    public int Id { get; set; }
+    public Product Product { get; set; }
+    protected override void OnParametersSet()
+    {
+        Product = Repo.GetProduct(Id);
+    }
+
+    public void SaveProduct()
+    {
+        Repo.SaveProduct(Product);
+        NavManager.NavigateTo("/Admin/Products");
+    }
+} 

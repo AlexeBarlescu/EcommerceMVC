@@ -1,8 +1,219 @@
 ﻿@page "/Admin/Products"
 @page "/Admin"
+@inherits OwningComponentBase<IDataRepository>
+@inject NavigationManager NavManager
+@implements IDisposable
 
-<h1>@Title</h1>
+<div class="form-group">
+    ITEMS PER PAGE
+    <select class="form-control text-center" style="width: 70px; display:inline-block"
+            value="@pageSize"
+            @onchange="HandlePageSizeChanged">
+        <option selected value="5">5</option>
+        <option value="10">10</option>
+        <option value="20">20</option>
+    </select>
+</div>
 
-@code {
-    public string Title { get; set; } = "Products";
+<table class="table table-sm table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Id</th>
+            <th @onclick="@HandleSortByName" style="cursor: pointer">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>Name</span>
+                    <i class="bi-arrow-down-up"></i>
+                </div>
+            </th>
+            <th @onclick="@HandleSortByCategory" style="cursor: pointer">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>Category</span>
+                    <i class="bi-arrow-down-up"></i>
+                </div>
+            </th>
+            <th @onclick="@HandleSortByPrice" style="cursor: pointer">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>Price</span>
+                    <i class="bi-arrow-down-up"></i>
+                </div>
+            </th>
+
+            <th>Sell Price</th>
+            <th @onclick="@HandleSortByStock" style="cursor: pointer">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>Stock</span>
+                    <i class="bi-arrow-down-up"></i>
+                </div>
+            </th>
+            <th class="text-right">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ProductData?.Count() > 0)
+        {
+            @foreach (Product p in ProductData)
+            {
+                <tr>
+                    <td><img src="@GetImageUrl(p.ImageUrl)" alt="" style="width:35px" /></td>
+                    <td>@p.ProductId</td>
+                    <td>@p.ProductName</td>
+                    <td>@p.Category</td>
+                    <td>@p.Price.ToString("c")</td>
+                    <td>@(p.SalePrice == null ? "None": p.SalePrice.Value.ToString("c"))</td>
+                    <td>@p.Stock</td>
+                    <td class="text-right">
+                        <NavLink class="btn btn-outline-warning btn-sm" title="Edit"
+                                 href="@($"/Admin/Products/Edit/{p.ProductId}")">
+                            <i class="fa fa-pen"></i>
+                        </NavLink>
+                        <button class="btn btn-outline-danger btn-sm" @onclick="@(() => HandleDelete(p))" title="Delete">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="8">
+                    <ul class="pagination pagination-sm my-1">
+                        <li class="page-item @(pageNumber <= 1 ? "disabled": "")">
+                            <NavLink href="@($"/Admin/Products?page={pageNumber - 1}")" class="page-link">
+                                Previous
+                            </NavLink>
+                        </li>
+                        @for (int i = 1; i <= totalPages; i++)
+                        {
+                            int index = i;
+                            <li class="page-item">
+                                <NavLink href="@($"/Admin/Products?page={index}")" class="page-link">@index</NavLink>
+                            </li>
+                        }
+                        <li class="page-item @(pageNumber >= totalPages ? "disabled": "")">
+                            <NavLink href="@($"/Admin/Products?page={pageNumber + 1}")"
+                                     class="page-link">
+                                Next
+                            </NavLink>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td colspan="5">No Products</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code
+{
+    public IDataRepository Repo => Service;
+    public IEnumerable<Product> ProductData { get; set; } = Enumerable.Empty<Product>();
+    public IQueryable<Product> ProductsQuery { get; set; }
+
+    public bool SortNameAscending { get; set; }
+    public bool SortCategoryAscending { get; set; }
+    public bool SortStockAscending { get; set; }
+    public bool SortPriceAscending { get; set; }
+
+
+    int pageNumber = 1;
+    int pageSize = 5;
+    int totalPages = 0;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        SetPageNumberFromQuery();
+        totalPages = (int)Math.Ceiling((double)Repo.Products.Count() / pageSize);
+
+        ProductsQuery = Repo.Products;
+        await UpdateData();
+
+        NavManager.LocationChanged += HandleLocationChanged;
+    }
+
+    void HandleLocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        SetPageNumberFromQuery();
+        UpdateData();
+        StateHasChanged();
+    }
+
+    public async Task UpdateData() => ProductData = await ProductsQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+    public async Task HandleDelete(Product p)
+    {
+        Repo.DeleteProduct(p);
+        await UpdateData();
+    }
+
+    public string GetImageUrl(string url) => url.Remove(0, 2);
+
+    void SetPageNumberFromQuery()
+    {
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("page", out var page))
+        {
+            pageNumber = Convert.ToInt32(page);
+        }
+    }
+
+    async Task HandleSortByName()
+    {
+        ProductsQuery = SortNameAscending
+            ? ProductsQuery.OrderBy(p => p.ProductName)
+            : ProductsQuery.OrderByDescending(p => p.ProductName);
+
+        SortNameAscending = !SortNameAscending;
+
+        await UpdateData();
+        StateHasChanged();
+    }
+
+    async Task HandleSortByCategory()
+    {
+        ProductsQuery = SortCategoryAscending
+            ? ProductsQuery.OrderBy(p => p.Category)
+            : ProductsQuery.OrderByDescending(p => p.Category);
+
+        SortCategoryAscending = !SortCategoryAscending;
+
+        await UpdateData();
+        StateHasChanged();
+    }
+
+    async Task HandleSortByPrice()
+    {
+        ProductsQuery = SortPriceAscending
+            ? ProductsQuery.OrderBy(p => p.Price)
+            : ProductsQuery.OrderByDescending(p => p.Price);
+
+        SortPriceAscending = !SortPriceAscending;
+
+        await UpdateData();
+        StateHasChanged();
+    }
+
+    async Task HandleSortByStock()
+    {
+        ProductsQuery = SortStockAscending
+            ? ProductsQuery.OrderBy(p => p.Stock)
+            : ProductsQuery.OrderByDescending(p => p.Stock);
+
+        SortStockAscending = !SortStockAscending;
+
+        await UpdateData();
+        StateHasChanged();
+    }
+    async Task HandlePageSizeChanged(ChangeEventArgs e)
+    {
+        pageSize = int.Parse(e.Value as string);
+        await UpdateData();
+        StateHasChanged();
+    }
+
+    public void Dispose() => NavManager.LocationChanged -= HandleLocationChanged;
 }
